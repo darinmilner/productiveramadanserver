@@ -1,0 +1,1 @@
+go build -o productiveramadan cmd/web/*.go && ./productiveramadan  
