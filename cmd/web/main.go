@@ -31,6 +31,11 @@ func main() {
 		log.Fatalf("Error loading .env file")
 	}
 	portNumber := os.Getenv("PORT")
+
+	if portNumber == "" {
+		portNumber = ":8000"
+	}
+
 	fmt.Print(portNumber)
 	err = run()
 	log.Println("Server running on port: ", portNumber)
