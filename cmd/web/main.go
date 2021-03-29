@@ -41,7 +41,7 @@ func main() {
 	err = run()
 	log.Println("Server running on port: ", portNumber)
 	srv := &http.Server{
-		Addr:    portNumber,
+		Addr:    ":" + portNumber,
 		Handler: routes(&app),
 	}
 
