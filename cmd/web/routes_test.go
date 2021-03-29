@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github/darinmilner/productiveramadanserver/internal/config"
 	"log"
 	"testing"
 
-	"github.com/darinmilner/productiveapp/internal/config"
 	"github.com/go-chi/chi"
 )
 

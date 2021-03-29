@@ -1,25 +1,20 @@
 package handlers
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github/darinmilner/productiveramadanserver/internal/config"
+	"github/darinmilner/productiveramadanserver/internal/models"
+	"github/darinmilner/productiveramadanserver/internal/render"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/darinmilner/productiveapp/internal/config"
-	"github.com/darinmilner/productiveapp/internal/forms"
-	"github.com/darinmilner/productiveapp/internal/helpers"
-	"github.com/darinmilner/productiveapp/internal/models"
-	"github.com/darinmilner/productiveapp/internal/render"
 	"github.com/hablullah/go-hijri"
-	"github.com/joho/godotenv"
 )
 
 //Repo is the repository used by the handlers
@@ -117,108 +112,6 @@ func (m *Repository) DoesNotExistPage(w http.ResponseWriter, r *http.Request) {
 }
 
 //About page function
-func (m *Repository) SignupSuccess(w http.ResponseWriter, r *http.Request) {
-	signup, ok := m.App.Session.Get(r.Context(), "signup").(models.Signup)
-	if !ok {
-		m.App.ErrorLog.Println("Could not get signup model from the session")
-		m.App.Session.Put(r.Context(), "error", "Could not get signup from context")
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-		return
-	}
-	m.App.Session.Remove(r.Context(), "signup")
-	data := make(map[string]interface{})
-	data["signup"] = signup
-	render.RenderTemplates(w, r, "signup-success.page.html", &models.TemplateData{
-		Data: data,
-	})
-}
-
-//Signup page function
-func (m *Repository) Signup(w http.ResponseWriter, r *http.Request) {
-	var emptySignupForm models.Signup
-
-	data := make(map[string]interface{})
-	data["signup"] = emptySignupForm
-
-	render.RenderTemplates(w, r, "signup.page.html", &models.TemplateData{
-		Form: forms.New(nil),
-		Data: data,
-	})
-}
-
-func (m *Repository) PostSignUp(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-
-	if err != nil {
-		helpers.ServerError(w, err)
-		return
-	}
-
-	signup := models.Signup{
-		FirstName: r.Form.Get("first-name"),
-		LastName:  r.Form.Get("last-name"),
-		Email:     r.Form.Get("email"),
-	}
-
-	log.Print("User Data from form")
-	log.Print(signup.FirstName)
-	log.Print(signup.LastName)
-	log.Print(signup.Email)
-
-	form := forms.New(r.PostForm)
-
-	form.Required("first-name", "last-name", "email")
-
-	form.MinLength("first-name", 3)
-
-	form.MinLength("last-name", 3)
-
-	form.IsEmail("email")
-
-	if !form.Valid() {
-		data := make(map[string]interface{})
-		data["signup"] = signup
-		render.RenderTemplates(w, r, "signup.page.html", &models.TemplateData{
-			Form: form,
-			Data: data,
-		})
-		return
-
-	}
-
-	var user models.User
-	user.FirstName = r.Form.Get("first-name")
-	user.LastName = r.Form.Get("last-name")
-	user.Email = r.Form.Get("email")
-
-	log.Print(user)
-	CreateUserInDB(w, r, user)
-
-	//Add session
-	m.App.Session.Put(r.Context(), "signup", signup)
-
-	http.Redirect(w, r, "/signup-success", http.StatusSeeOther)
-}
-
-//CreateUserInDB creates a new user who signed up in the DB
-func CreateUserInDB(w http.ResponseWriter, r *http.Request, user models.User) {
-	createHeader(w)
-
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-	dbName := os.Getenv("DbName")
-	dBCollection := os.Getenv("DbCollection")
-
-	json.NewDecoder(r.Body).Decode(&user)
-	collection := config.Client.Database(dbName).Collection(dBCollection)
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	result, err := collection.InsertOne(ctx, user)
-	handleError(err)
-	json.NewEncoder(w).Encode(result)
-}
 
 func handleError(err error) {
 	if err != nil {

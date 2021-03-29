@@ -2,10 +2,9 @@ package render
 
 import (
 	"fmt"
+	"github/darinmilner/productiveramadanserver/internal/models"
 	"net/http"
 	"testing"
-
-	"github.com/darinmilner/productiveapp/internal/models"
 )
 
 func getSession() (*http.Request, error) {

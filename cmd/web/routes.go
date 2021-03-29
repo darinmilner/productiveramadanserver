@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github/darinmilner/productiveramadanserver/internal/config"
+	"github/darinmilner/productiveramadanserver/internal/handlers"
 	"log"
 	"net/http"
 
-	"github.com/darinmilner/productiveapp/internal/config"
-	"github.com/darinmilner/productiveapp/internal/handlers"
 	"github.com/go-chi/chi"
 )
 
@@ -26,9 +26,6 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/ayahs", ayahHandler.GetAyahs)
 	mux.Get("/hadiths/{id}", hadithHandler.GetHadith)
 	mux.Get("/ayahs/{id}", ayahHandler.GetAyahs)
-	mux.Get("/signup", handlers.Repo.Signup)
-	mux.Post("/signup", handlers.Repo.PostSignUp)
-	mux.Get("/signup-success", handlers.Repo.SignupSuccess)
 	mux.Get("/*", handlers.Repo.DoesNotExistPage)
 
 	fileServer := http.FileServer(http.Dir("./static/"))

@@ -2,14 +2,14 @@ package handlers
 
 import (
 	"fmt"
+	"github/darinmilner/productiveramadanserver/internal/config"
+	"github/darinmilner/productiveramadanserver/internal/render"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 
-	"github.com/darinmilner/productiveapp/internal/config"
-	"github.com/darinmilner/productiveapp/internal/render"
 	"github.com/go-chi/chi"
 )
 

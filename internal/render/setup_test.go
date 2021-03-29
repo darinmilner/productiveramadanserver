@@ -1,7 +1,7 @@
 package render
 
 import (
-	"encoding/gob"
+	"github/darinmilner/productiveramadanserver/internal/config"
 	"log"
 	"net/http"
 	"os"
@@ -9,8 +9,6 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/darinmilner/productiveapp/internal/config"
-	"github.com/darinmilner/productiveapp/internal/models"
 )
 
 var session *scs.SessionManager
@@ -18,10 +16,8 @@ var session *scs.SessionManager
 var testApp config.AppConfig
 
 func TestMain(m *testing.M) {
-	//Put Signup model into the session
-	gob.Register(models.Signup{})
 
-	testApp.InProduction = false
+	testApp.InProduction = true
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 

@@ -2,10 +2,9 @@ package helpers
 
 import (
 	"fmt"
+	"github/darinmilner/productiveramadanserver/internal/config"
 	"net/http"
 	"runtime/debug"
-
-	"github.com/darinmilner/productiveapp/internal/config"
 )
 
 var app *config.AppConfig

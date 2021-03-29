@@ -1,7 +1,5 @@
 package models
 
-import "github.com/darinmilner/productiveapp/internal/forms"
-
 //TemplateData sent from handlers to HTML templates
 type TemplateData struct {
 	StringMap map[string]string
@@ -11,7 +9,6 @@ type TemplateData struct {
 	FlashMsg  string
 	Warning   string
 	Error     string
-	Form      *forms.Form
 	Data      map[string]interface{}
 	Day       int
 	Month     string
