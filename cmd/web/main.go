@@ -14,6 +14,7 @@ import (
 	"github.com/darinmilner/productiveapp/internal/handlers"
 	"github.com/darinmilner/productiveapp/internal/models"
 	"github.com/darinmilner/productiveapp/internal/render"
+	_ "github.com/heroku/x/hmetrics/onload"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
