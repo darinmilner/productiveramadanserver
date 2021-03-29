@@ -1,1 +1,1 @@
-web: bin/productiveramadan
+web: productiveramadan
