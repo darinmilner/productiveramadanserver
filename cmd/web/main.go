@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/gob"
-	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -18,7 +17,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const portNumber = ":8001"
+//const portNumber = ":8001"
 
 var session *scs.SessionManager
 var app config.AppConfig
@@ -27,6 +26,9 @@ var infoLog *log.Logger
 var errorLog *log.Logger
 
 func main() {
+
+	os.Setenv("PORT", "8001")
+	portNumber := os.Getenv("PORT")
 
 	err := run()
 	log.Println("Server running on port: ", portNumber)
@@ -44,13 +46,7 @@ func run() error {
 	//put into the session
 	gob.Register(models.Signup{})
 
-	//read flags
-	inProduction := flag.Bool("production", true, "Application is in production")
-	useCache := flag.Bool("cache", true, "Use Template cache")
-
-	flag.Parse()
-
-	app.InProduction = *inProduction
+	app.InProduction = true
 
 	//Info log
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -76,7 +72,7 @@ func run() error {
 	}
 
 	app.TemplateCache = tc
-	app.UseCache = *useCache
+	app.UseCache = true
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
