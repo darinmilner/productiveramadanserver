@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/gob"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +14,7 @@ import (
 	"github.com/darinmilner/productiveapp/internal/handlers"
 	"github.com/darinmilner/productiveapp/internal/models"
 	"github.com/darinmilner/productiveapp/internal/render"
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -27,10 +29,16 @@ var errorLog *log.Logger
 
 func main() {
 
-	os.Setenv("PORT", "8001")
-	portNumber := os.Getenv("PORT")
+	//os.Setenv("PORT", "8001")
 
-	err := run()
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+	portNumber := os.Getenv("PORT")
+	fmt.Print(portNumber)
+	err = run()
 	log.Println("Server running on port: ", portNumber)
 	srv := &http.Server{
 		Addr:    portNumber,
@@ -74,9 +82,15 @@ func run() error {
 	app.TemplateCache = tc
 	app.UseCache = true
 
+	err = godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
-	clientOptions := options.Client().ApplyURI(config.DbConnectionString)
+	dbConnectionString := os.Getenv("DbConnectionString")
+	clientOptions := options.Client().ApplyURI(dbConnectionString)
 	config.Client, _ = mongo.Connect(ctx, clientOptions)
 
 	repo := handlers.NewRepo(&app)

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -18,6 +19,7 @@ import (
 	"github.com/darinmilner/productiveapp/internal/models"
 	"github.com/darinmilner/productiveapp/internal/render"
 	"github.com/hablullah/go-hijri"
+	"github.com/joho/godotenv"
 )
 
 //Repo is the repository used by the handlers
@@ -202,8 +204,16 @@ func (m *Repository) PostSignUp(w http.ResponseWriter, r *http.Request) {
 func CreateUserInDB(w http.ResponseWriter, r *http.Request, user models.User) {
 	createHeader(w)
 
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+	dbName := os.Getenv("DbName")
+	dBCollection := os.Getenv("DbCollection")
+
 	json.NewDecoder(r.Body).Decode(&user)
-	collection := config.Client.Database(config.DbName).Collection(config.CollectionName)
+	collection := config.Client.Database(dbName).Collection(dBCollection)
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	result, err := collection.InsertOne(ctx, user)
 	handleError(err)
