@@ -11,8 +11,6 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-
-	"github.com/joho/godotenv"
 )
 
 //const portNumber = ":8001"
@@ -25,11 +23,11 @@ var errorLog *log.Logger
 
 func main() {
 
-	err := godotenv.Load(".env")
+	// err := godotenv.Load(".env")
 
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
+	// if err != nil {
+	// 	log.Fatalf("Error loading .env file")
+	// }
 	portNumber := os.Getenv("PORT")
 
 	if portNumber == "" {
@@ -37,7 +35,7 @@ func main() {
 	}
 
 	fmt.Print(portNumber)
-	err = run()
+	err := run()
 	log.Println("Server running on port: ", portNumber)
 	srv := &http.Server{
 		Addr:    ":" + portNumber,
