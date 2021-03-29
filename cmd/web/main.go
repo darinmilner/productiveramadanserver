@@ -33,14 +33,14 @@ func main() {
 	portNumber := os.Getenv("PORT")
 
 	if portNumber == "" {
-		portNumber = ":8000"
+		portNumber = "8000"
 	}
 
 	fmt.Print(portNumber)
 	err = run()
 	log.Println("Server running on port: ", portNumber)
 	srv := &http.Server{
-		Addr:    portNumber,
+		Addr:    ":" + portNumber,
 		Handler: routes(&app),
 	}
 
